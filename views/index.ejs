@@ -1,12 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="albumsApp">
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="/stylesheets/style.css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
-  <h1>Welcome, <%= user.displayName %></h1>
+  <header>
+    <div class="header-container">
+      <div class="logo-hhh">
+        <h3 id="logo">fbPhotos</h3>
+      </div>
+      <div class="right-side">
+        <span>Welcome, <span id="name"><%= user.displayName %> </span></span>
+
+      </div>
+      <div class="logout">
+        <a href="/logout">Logout
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="122.775px" height="122.776px" viewBox="0 0 122.775 122.776" style="fill: rgb(204, 204, 204);" xml:space="preserve">
+          <g style="fill: rgb(204, 204, 204);">
+          	<path d="M86,28.074v-20.7c0-3.3-2.699-6-6-6H6c-3.3,0-6,2.7-6,6v3.9v78.2v2.701c0,2.199,1.3,4.299,3.2,5.299l45.6,23.601   c2,1,4.4-0.399,4.4-2.7v-23H80c3.301,0,6-2.699,6-6v-32.8H74v23.8c0,1.7-1.3,3-3,3H53.3v-30.8v-19.5v-0.6c0-2.2-1.3-4.3-3.2-5.3   l-26.9-13.8H71c1.7,0,3,1.3,3,3v11.8h12V28.074z" style="fill: rgb(204, 204, 204);"></path>
+          	<path d="M101.4,18.273l19.5,19.5c2.5,2.5,2.5,6.2,0,8.7l-19.5,19.5c-2.5,2.5-6.301,2.601-8.801,0.101   c-2.399-2.399-2.1-6.4,0.201-8.8l8.799-8.7H67.5c-1.699,0-3.4-0.7-4.5-2c-2.8-3-2.1-8.3,1.5-10.3c0.9-0.5,2-0.8,3-0.8h34.1   c0,0-8.699-8.7-8.799-8.7c-2.301-2.3-2.601-6.4-0.201-8.7C95,15.674,98.9,15.773,101.4,18.273z" style="fill: rgb(204, 204, 204);"></path>
+          </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="container" ng-controller="myAlbumsController as myAlbums">
+    <div class="grid --col-1">
+      <div class="thumbnails-albums">
+        <div ng-repeat="album in myAlbums.albums | orderBy: 'name'" class="thumbnail-One">
+          <div  ng-click='myAlbums.getPhotos(album.id)' class="hax">
+            <div ng-class="album.photos.data ? 'with-cover' : 'no-cover'" style="background-image: url({{album.photos.data[0].source || '/images/empty-albums.png'}})" class="thumb-container imgAlbum" >
+              <div class="album-desc">
+                <h3 class="album-title">{{album.name}}</h3>
+                <small> {{ album.photos.data.length ? album.photos.data.length+' Pictures': 'Empty Album'}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid --col-2">
+      <div class="thumbnail-photos"></div>
+    </div>
+  </div>
 </body>
 <script src="/javascripts/angular.min.js"></script>
 <script src="/javascripts/angular-resource.min.js"></script>

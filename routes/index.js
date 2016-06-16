@@ -6,6 +6,7 @@ var FB = require('fb');
 
 require('dotenv').config();
 
+/* Face Strategy Setup: START */
 passport.use(new Strategy({
     clientID: process.env.FB_CLIENT_ID ,
     clientSecret: process.env.FB_CLIENT_SECRET,
@@ -24,6 +25,7 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
+/* Face Strategy Setup: END */
 
 router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'user_photos' })); // Ask user for user_photos permissions
 
@@ -36,7 +38,18 @@ router.get('/auth/facebook/callback',
 
 
 /* GET home page. */
-
 router.get('/', (req, res) => req.isAuthenticated() ? res.render('index', { user: req.user}) : res.render('login'))
+/* Logout */
+router.get('/logout', (req, res) => {req.logout(); res.redirect('/')})
 
+/* Fetch All Albums&Images */
+router.get('/api/albums', (req, res) => {
+  FB.api(
+    '/me?fields=albums.fields(id,name,cover_photo,photos.fields(name,picture,source))',
+    'GET',
+    function (response) {
+      response.error ? res.json(response): res.json(response.albums.data) // Hanlde the response if user authenticated or not.
+    }
+  )
+})
 module.exports = router;
