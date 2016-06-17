@@ -45,7 +45,7 @@ router.get('/logout', (req, res) => {req.logout(); res.redirect('/')})
 /* Fetch All Albums&Images */
 router.get('/api/albums', (req, res) => {
   FB.api(
-    '/me?fields=albums.fields(id,name,cover_photo,photos.fields(name,picture,source))',
+    '/me?fields=albums.fields(id,name,cover_photo,photos.fields(name,picture,source, likes))',
     'GET',
     function (response) {
       response.error ? res.json(response): res.json(response.albums.data) // Hanlde the response if user authenticated or not.
