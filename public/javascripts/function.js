@@ -1,11 +1,13 @@
-angular.module('albumsApp', ['ngResource'])
-.controller('myAlbumsController', function($scope, apiAlbums){
+angular.module('albumsApp', [])
+.controller('myAlbumsController', function($scope, $http,apiAlbums){
   var myAlbums = this
+  var rand = null;
   myAlbums.singleAlbum = []
-  myAlbums.albums = apiAlbums.query();
+  myAlbums.albums = [];
+  myAlbums.cuurentAlbm = '';
 
-  myAlbums.albums.$promise.then(function(res){
-    myAlbums.albums = res
+  apiAlbums.getJSONAlbum().then(function(res){
+    myAlbums.albums = res.data
   })
 
   myAlbums.getPhotos = function(id){
@@ -16,6 +18,8 @@ angular.module('albumsApp', ['ngResource'])
     if(typeof albums[0].photos === 'undefined' ){
       myAlbums.singleAlbum = []
     }else{
+      // TODO: ADD the current album before extrating data.
+      myAlbums.cuurentAlbm = albums[0].name
       myAlbums.singleAlbum = albums[0].photos.data
       /* Add a proprtyr selected to Hanlde the pictures selected */
       myAlbums.singleAlbum.map((album) => album.selected = false)
@@ -23,12 +27,26 @@ angular.module('albumsApp', ['ngResource'])
   }
 
   myAlbums.selected = function() {
-    var count = 0;
-    angular.forEach(myAlbums.singleAlbum, function(photo) {
-      count += photo.selected ? 1 : 0;
+    var count = 0
+    angular.forEach(myAlbums.singleAlbum, photo => count += photo.selected ? 1 : 0)
+    return count
+  }
+
+
+
+  myAlbums.sendData = function(){
+    var elements = document.querySelectorAll('.selected-true')
+    var pictureSelected = []
+    var albumSelected = []
+    Array.prototype.forEach.call(elements, function(el, i){
+      // Push the seleced pics to pictureSelected array
+      pictureSelected.push(el.getElementsByTagName('img')[0].src);
+      console.log(myAlbums.singleAlbum);
     });
-    return count;
-  };
+    // push pictureSelected to albums
+    albumSelected.push({albumName: myAlbums.cuurentAlbm, photos: pictureSelected})
+    apiAlbums.postPhotos(albumSelected)
+  }
 })
 .directive('toggleClass', function() {
     return {
@@ -50,6 +68,18 @@ angular.module('albumsApp', ['ngResource'])
         }
     };
 })
-.factory('apiAlbums', function($resource) {
-  return  $resource('http://localhost:3000/api/albums');
+.factory('apiAlbums', function($http) {
+  return {
+    getJSONAlbum: function(){
+      return $http.get('http://localhost:3000/api/albums').error( error => console.error(error))
+    },
+    postPhotos: function(data){
+      return $http({
+        url: '/upload',
+        method: 'POST',
+        data: data,
+        headers: {'Content-Type': 'application/json'}
+      }).error( error => console.error(error))
+    }
+  }
 });

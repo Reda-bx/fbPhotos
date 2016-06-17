@@ -15,9 +15,11 @@
     "express": "~4.13.1",
     "express-session": "^1.13.0",
     "fb": "^1.1.1",
+    "fs": "0.0.2",
     "morgan": "~1.6.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
+    "request": "^2.72.0",
     "serve-favicon": "~2.3.0"
   }
 }
