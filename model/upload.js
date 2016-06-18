@@ -32,7 +32,7 @@ var recursive = function (index, data, io){
     console.log("mi done");
   }else{
     // TODO: Save photos by they default names
-    download(data[0].photos[index-1], './albums/'+data[0].userId+'/'+data[0].albumName+'/'+data[0].photos[index-1].split('.jpg')[0].split('/').pop()+'.jpg', function(){
+    download(data[0].photos[index-1], './albums/'+data[0].userId+'/'+data[0].albumName+'/'+data[0].photos[index-1].split('.jpg')[0].split('/').pop()+'.jpg', function(){ //
       console.log('done');
       console.log();
       io.sockets.in('sessionId').emit('uploadingState', index-1)
