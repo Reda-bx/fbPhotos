@@ -1,4 +1,4 @@
-// This model is responsable to make 
+// This model is responsable to make
 // request to image selected by user
 // and save to server
 
@@ -31,8 +31,8 @@ var recursive = function (index, data, io){
   if(index==0){
     console.log("mi done");
   }else{
-    console.log();
-    download(data[0].photos[index-1], './albums/'+data[0].userId+'/'+data[0].albumName+'/test'+index+'.jpg', function(){
+    // TODO: Save photos by they default names
+    download(data[0].photos[index-1], './albums/'+data[0].userId+'/'+data[0].albumName+'/'+data[0].photos[index-1].split('.jpg')[0].split('/').pop()+'.jpg', function(){
       console.log('done');
       console.log();
       io.sockets.in('sessionId').emit('uploadingState', index-1)
