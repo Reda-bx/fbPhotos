@@ -13,8 +13,8 @@
         <h3 id="logo">fbPhotos</h3>
       </div>
       <div class="center-side">
-        <span>Welcome, <span id="name"><%= user.displayName %> </span></span>
-        <h3 ng-if="myAlbums.singleAlbum.length > 0">selected: {{myAlbums.selected()}}/{{myAlbums.singleAlbum.length}}, From {{myAlbums.cuurentAlbm}}</h3>
+        <span>Welcome, <span id="name" class="<%= user.id %>"><%= user.displayName %> </span></span>
+        <h3 ng-if="myAlbums.singleAlbum.length > 0"><div id="res"></div>selected: {{myAlbums.selected()}}/{{myAlbums.singleAlbum.length}}, From {{myAlbums.cuurentAlbm}}</h3>
       </div>
       <div class="logout">
         <a ng-click="myAlbums.sendData()" ng-if="myAlbums.selected() > 0" href="#">Upload
@@ -52,6 +52,10 @@
     </div>
   </div>
 </body>
+<script src="/javascripts/libs/socket.io.js"></script>
 <script src="/javascripts/libs/angular.min.js"></script>
 <script src="/javascripts/function.js"></script>
+<script>
+
+</script>
 </html>

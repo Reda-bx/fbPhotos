@@ -1,3 +1,5 @@
+var socket = io.connect();
+
 angular.module('albumsApp', [])
 .controller('myAlbumsController', function($scope, $http,apiAlbums){
   var myAlbums = this
@@ -38,14 +40,21 @@ angular.module('albumsApp', [])
     var elements = document.querySelectorAll('.selected-true')
     var pictureSelected = []
     var albumSelected = []
+    var userId = document.getElementById('name').getAttribute("class")
+    console.log(userId);
     Array.prototype.forEach.call(elements, function(el, i){
       // Push the seleced pics to pictureSelected array
       pictureSelected.push(el.getElementsByTagName('img')[0].src);
-      console.log(myAlbums.singleAlbum);
     });
     // push pictureSelected to albums
-    albumSelected.push({albumName: myAlbums.cuurentAlbm, photos: pictureSelected})
-    apiAlbums.postPhotos(albumSelected)
+    albumSelected.push({userId: userId, albumName: myAlbums.cuurentAlbm, photos: pictureSelected})
+    // apiAlbums.postPhotos(albumSelected)
+    socket.emit('uploadFiles', albumSelected)
+    angular.forEach(myAlbums.singleAlbum, photo => photo.selected = false)
+    socket.on('uploadingState', function(data){
+      console.log(data);
+      document.getElementById('res').innerHTML = data
+    })
   }
 })
 .directive('toggleClass', function() {
@@ -72,14 +81,6 @@ angular.module('albumsApp', [])
   return {
     getJSONAlbum: function(){
       return $http.get('http://localhost:3000/api/albums').error( error => console.error(error))
-    },
-    postPhotos: function(data){
-      return $http({
-        url: '/upload',
-        method: 'POST',
-        data: data,
-        headers: {'Content-Type': 'application/json'}
-      }).error( error => console.error(error))
     }
   }
 });

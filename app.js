@@ -6,11 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport')
+var progress = require('./model/upload')
 
 var routes = require('./routes/index');
 
 var app = express();
-
+var server = app.listen(3000)
+var io = require('socket.io').listen(server);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -61,8 +63,8 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-app.listen(3000, function(){
+progress(io)
+server.listen(3000, function(){
   console.log('Meet me at: 127.0.0.1:3000');
 })
 
