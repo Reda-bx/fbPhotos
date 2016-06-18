@@ -29,8 +29,7 @@ router.get('/api/albums', (req, res) => {
 })
 
 
-// Switching to Socket instead of making request to each selected image (may cuz lack in memory)
-
+// Switching to Socket instead of making request to each selected image (too many http post request may cost lack in memory)
 // router.post('/upload', (req, res) =>{
 //   // TODO: Save /albums/userId/albumName/pic1,pic2,pic3.....picN
 //   // Save file by id user (id is unique, displayName not.)
