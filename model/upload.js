@@ -30,12 +30,13 @@ var creatPath = function (path) {
 var recursive = function (index, data, io){
   if(index==0){
     console.log("mi done");
+    io.sockets.in('sessionId').emit('uploadingState', 'done')
   }else{
     // TODO: Save photos by they default names
     download(data[0].photos[index-1], './albums/'+data[0].userId+'/'+data[0].albumName+'/'+data[0].photos[index-1].split('.jpg')[0].split('/').pop()+'.jpg', function(){ //
       console.log('done');
-      console.log();
-      io.sockets.in('sessionId').emit('uploadingState', index-1)
+
+      io.sockets.in('sessionId').emit('uploadingState', index)
       recursive(index-1, data, io)
     })
   }

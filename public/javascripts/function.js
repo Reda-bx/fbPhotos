@@ -6,8 +6,8 @@ angular.module('albumsApp', [])
   var rand = null;
   myAlbums.singleAlbum = []
   myAlbums.albums = [];
-  myAlbums.cuurentAlbm = '';
-
+  myAlbums.cuurentAlbm = ''
+  myAlbums.bool = true
   apiAlbums.getJSONAlbum().then(function(res){
     myAlbums.albums = res.data
   })
@@ -37,6 +37,7 @@ angular.module('albumsApp', [])
 
 
   myAlbums.sendData = function(){
+    document.getElementById('title-upload').innerHTML = 'Uploading in Progress, please wait.'
     var elements = document.querySelectorAll('.selected-true')
     var pictureSelected = []
     var albumSelected = []
@@ -51,9 +52,28 @@ angular.module('albumsApp', [])
     // apiAlbums.postPhotos(albumSelected)
     socket.emit('uploadFiles', albumSelected)
     angular.forEach(myAlbums.singleAlbum, photo => photo.selected = false)
+
+    // Keep the user updated about the uploading State
+    //
     socket.on('uploadingState', function(data){
-      console.log(data);
-      document.getElementById('res').innerHTML = data
+      // $scope.$apply lets angular know that myAlbums.bool has updated and refresh it in the DOM
+      $scope.$apply(function(){
+        if(data === "done"){
+          myAlbums.bool = false
+          console.log(myAlbums.bool);
+          document.getElementById('slash').innerHTML = ''
+          document.getElementById('res').innerHTML = ''
+          document.getElementById('title-upload').innerHTML = 'We save all your selected in our server.'
+
+        }else{
+          // document.getElementById('upload-inprogress').style.display = "block"
+          // document.getElementById('doneupload').style.display = "none"
+          myAlbums.bool = true
+          console.log(myAlbums.bool);
+          document.getElementById('slash').innerHTML = '/ '+ pictureSelected.length
+          document.getElementById('res').innerHTML = pictureSelected.length - data + 1
+        }
+      })
     })
   }
 })
